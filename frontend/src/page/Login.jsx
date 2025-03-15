@@ -57,7 +57,7 @@ function Login() {
                             <Loader className="size-5 animate-spin" />
                             Loading...</>
                             :
-                            "Login"
+                            "Sign up"
                     }
                 </button>
             </form>

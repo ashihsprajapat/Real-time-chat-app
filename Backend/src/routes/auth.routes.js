@@ -4,6 +4,7 @@ import { authLogin, authLogout, checkAuth, register, updateProfile } from '../co
 import upload from '../config/multer.js';
 import { isLogin } from '../middlware/auth.middleware.js';
 
+
 const Router = express.Router();
 
 //upload.single("image"),
@@ -19,10 +20,10 @@ Router.route('/logout')
 
 
 Router.route("/update-profile")
-    .put(isLogin, updateProfile)
+    .put(isLogin,upload.single("profilePic")  , updateProfile)
 
 Router.route("/check")
-.get(isLogin, checkAuth)
+.get(isLogin,  checkAuth)
 
 
 export default Router;

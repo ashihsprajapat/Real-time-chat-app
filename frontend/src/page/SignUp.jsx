@@ -100,7 +100,7 @@ function SignUp() {
                         Must be more than 6 characters
                     </p>
 
-                    <button type='submit' className='btn btn-primary  w-fit ' disabled={isSingingUp}  >
+                    <button type='submit' className='btn btn-primary f  w-fit ' disabled={isSingingUp}  >
                         {
                             isSingingUp ? <>
 

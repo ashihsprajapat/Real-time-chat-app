@@ -8,7 +8,7 @@ import cloudinary from 'cloudinary';
 
 //register function with unique email , and password fullName then generate token in res.cookie
 export const register = async (req, res) => {
-   // console.log("register")
+    // console.log("register")
     const { email, password, fullName } = req.body;
 
     if (!email || !password || !fullName)
@@ -50,7 +50,7 @@ export const register = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.json({ success: false, message: err.message });
+        res.json({ success: false, message: err.message, token });
     }
 }
 
@@ -72,12 +72,15 @@ export const authLogin = async (req, res) => {
         if (!match)
             return res.status(400).json({ success: false, message: "Wrong password" })
 
-        tokenGenerator(user._id, res);
+        const token = tokenGenerator(user._id, res);
 
         res.status(200).json({
             success: true,
             _id: user._id,
             fullName: user.fullName,
+            profilePic: user.profilePic,
+            email: user.email,
+            token
         })
 
 
@@ -89,34 +92,37 @@ export const authLogin = async (req, res) => {
 //logout function that delete the cookie
 export const authLogout = async (req, res) => {
     try {
-
+        // Clear the cookie by setting it with a past expiration date and zero maxAge
+        console.log('cookie chat-app-jwt ', req.cookie)
         res.clearCookie("token_chat_app", {
-            httpOnly: true,
-            sameSite: 'strict',
-            secure: process.env.NODE_ENV !== 'development',
-        })
+            httpOnly: true, // Ensures client-side JS can't access the cookie
+            sameSite: 'None', // Allow cross-site cookies (if necessary)
+            secure: process.env.NODE_ENV === 'production', // Set secure cookies only in production
+        });
 
-        res.status(200).json({ success: true, message: "logout successfull" })
-
+        res.status(200).json({ success: true, message: "Logout successful" });
     } catch (err) {
-        res.status(400).json({ success: false, message: err.message })
+        res.status(400).json({ success: false, message: err.message });
     }
-}
+};
 
 //update profile with image
 export const updateProfile = async (req, res) => {
-
+    console.log("profile update")
     try {
-        const { profilePic } = req.body;
+        const  profilePic  = req.file;
+        console.log(profilePic)
         const userId = req.user._id;
 
         if (!profilePic)
             return res.status(400).json({ success: false, message: "profile pictuer required" })
 
-        const uploadResponce = cloudinary.uploader.upload(profilePic, 1)
+        const uploadResponce = cloudinary.uploader.upload(profilePic.path)
         console.log(uploadResponce);
 
         const updateUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponce.secure_url });
+
+        res.status(200).json({success:true, user:updateUser})
 
     } catch (err) {
         res.json({ success: false, message: err.message })
@@ -124,10 +130,10 @@ export const updateProfile = async (req, res) => {
 }
 
 
-export const checkAuth =  (req, res) => {
-    try{
-        res.status(200).json({user: req.user});
-    }catch(err){
-        res.status(500).json({success:false, message:err.message})
+export const checkAuth = (req, res) => {
+    try {
+        res.status(200).json({ success:true, user: req.user });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message })
     }
 }

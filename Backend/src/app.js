@@ -59,4 +59,4 @@ app.get("/", (req, res) => {
 app.use("/api/auth", userAuth)
 
 //route for message
-app.use("/api/message", messageRouter)
+app.use("/api/messages", messageRouter)
