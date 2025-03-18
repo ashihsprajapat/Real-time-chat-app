@@ -22,30 +22,26 @@ import { server, app, io } from "./config/socket.js";
 import path from 'path';
 
 
-const allowedOrigins = ['http://localhost:5173'];
+//const allowedOrigins = ['http://localhost:5173'];
 
-// app.use(cors({
-//     origin: '*',
-//     credentials: true,  // Enable cookies and authorization headers
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? ['https://your-frontend-app.onrender.com'] // Production frontend URL
+    : ['http://localhost:5173'];  // Development frontend URL
 
-// }));
 
-app.use("/api/auth/login", (req, res, next) => {
-    console.log(req.body)
-    next()
-})
 
-app.use(cors({
-    origin: (origin, callback) => {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
 
-}));
+
+    app.use(cors({
+        origin: (origin, callback) => {
+            if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true,
+    }));
 
 app.use(express.json());
 
@@ -69,7 +65,7 @@ await mognooseConnection()
 await cloudinaryConnection();
 
 app.get("/", (req, res) => {
-    res.json({ Run: "Good" });
+    res.send("ok working")
 })
 
 //router for authentication
@@ -80,13 +76,7 @@ app.use("/api/auth", userAuth)
 app.use("/api/messages", messageRouter)
 
 
-// if (process.env.NODE_ENV === "production") {
-//     app.use(express.static(path.join({ __dirname: "../../frontend/dist" })))
 
-//     app.get("*", (req, res) => {
-//         res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"))
-//     })
-// }
 if (process.env.NODE_ENV === "production") {
     // Serve the frontend build files from the 'dist' directory
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
