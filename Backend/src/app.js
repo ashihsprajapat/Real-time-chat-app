@@ -30,7 +30,7 @@ const allowedOrigins = ['http://localhost:5173'];
 
 // }));
 
-app.use("/api/auth/login",(req,res,next)=>{
+app.use("/api/auth/login", (req, res, next) => {
     console.log(req.body)
     next()
 })
@@ -56,7 +56,7 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
-const __dirname=path.resolve();
+const __dirname = path.resolve();
 
 server.listen(PORT, () => {
     console.log("App is listing on port", PORT);
@@ -80,6 +80,19 @@ app.use("/api/auth", userAuth)
 app.use("/api/messages", messageRouter)
 
 
-if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join({__dirname:"../../frontend/dist"})))
+// if (process.env.NODE_ENV === "production") {
+//     app.use(express.static(path.join({ __dirname: "../../frontend/dist" })))
+
+//     app.get("*", (req, res) => {
+//         res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"))
+//     })
+// }
+if (process.env.NODE_ENV === "production") {
+    // Serve the frontend build files from the 'dist' directory
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+    // Handle all routes by sending the index.html file
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    });
 }
