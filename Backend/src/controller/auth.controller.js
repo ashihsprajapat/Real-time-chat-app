@@ -8,7 +8,7 @@ import cloudinary from 'cloudinary';
 
 //register function with unique email , and password fullName then generate token in res.cookie
 export const register = async (req, res) => {
-    // console.log("register")
+
     const { email, password, fullName } = req.body;
 
     if (!email || !password || !fullName)
@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         if (!newUser)
             return res.status(400).json({ success: false, message: "Invalid user data" })
 
-        const token = tokenGenerator(newUser._id, res)
+        const token = tokenGenerator(newUser._id)
 
         await newUser.save();
 
@@ -45,11 +45,11 @@ export const register = async (req, res) => {
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
-            prifilePic: newUser.prifilePic,
+
         });
 
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.json({ success: false, message: err.message, token });
     }
 }
@@ -57,6 +57,7 @@ export const register = async (req, res) => {
 // login function that check email exist and password same then generate token in res.cookie
 export const authLogin = async (req, res) => {
     const { email, password } = req.body;
+    //console.log(email, password)
 
     if (!email || !password)
         return res.status(400).json({ success: false, message: "All details required" })
@@ -72,7 +73,7 @@ export const authLogin = async (req, res) => {
         if (!match)
             return res.status(400).json({ success: false, message: "Wrong password" })
 
-        const token = tokenGenerator(user._id, res);
+        const token = tokenGenerator(user._id);
 
         res.status(200).json({
             success: true,
@@ -85,6 +86,7 @@ export const authLogin = async (req, res) => {
 
 
     } catch (err) {
+        console.log(err)
         res.json({ success: false, message: err.message })
     }
 }
@@ -108,21 +110,26 @@ export const authLogout = async (req, res) => {
 
 //update profile with image
 export const updateProfile = async (req, res) => {
-    console.log("profile update")
+    // console.log("profile update")
     try {
-        const  profilePic  = req.file;
-        console.log(profilePic)
+        const profilePic = req.file;
+        //  console.log(profilePic)
         const userId = req.user._id;
+
+        const user = await User.findById(userId);
+
+        if (!user)
+            return res.status(400).json({ message: "user not found", success: false });
 
         if (!profilePic)
             return res.status(400).json({ success: false, message: "profile pictuer required" })
 
         const uploadResponce = cloudinary.uploader.upload(profilePic.path)
-        console.log(uploadResponce);
+        //  console.log(uploadResponce);
 
         const updateUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponce.secure_url });
 
-        res.status(200).json({success:true, user:updateUser})
+        res.status(200).json({ success: true, user: updateUser })
 
     } catch (err) {
         res.json({ success: false, message: err.message })
@@ -132,7 +139,7 @@ export const updateProfile = async (req, res) => {
 
 export const checkAuth = (req, res) => {
     try {
-        res.status(200).json({ success:true, user: req.user });
+        res.status(200).json({ success: true, user: req.user });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message })
     }

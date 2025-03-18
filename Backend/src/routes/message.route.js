@@ -11,6 +11,7 @@ Router.route("/users")
     .get(isLogin, getUsersForSidebar)
 
 
+    //get message for a perticuler user
 Router.route('/:id')
     .get(isLogin, getMessage)
 

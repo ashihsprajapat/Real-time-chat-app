@@ -3,9 +3,12 @@
 import { create } from 'zustand'
 import { axiosInstance } from './../lib/axios.js';
 import { toast } from 'react-hot-toast'
+import {io} from 'socket.io-client'
 
 
-export const useAuthStore = create((set) => ({
+const BASE_URL="http://localhost:8080/"
+
+export const useAuthStore = create((set, get) => ({
     authUser: null,
 
     isSingingUp: false,
@@ -18,6 +21,8 @@ export const useAuthStore = create((set) => ({
 
     onlineUsers: ["67d02212605072ee8f546c00"],
 
+    socket:null,    
+
     chekAuth: async () => {
         try {
             const token_chat_app = localStorage.getItem("token_chat_app");
@@ -25,7 +30,7 @@ export const useAuthStore = create((set) => ({
 
             if (result.data.success) {
                 set({ authUser: result.data.user })
-
+                get().connectSocket();
             }
 
         } catch (err) {
@@ -50,6 +55,7 @@ export const useAuthStore = create((set) => ({
                 toast.success("register successfull")
                 set({ authUser: result.data })
                 localStorage.setItem("token_chat_app", result.data.token)
+                get().connectSocket();
             }
 
 
@@ -70,7 +76,7 @@ export const useAuthStore = create((set) => ({
 
             set({ authUser: null });
             toast.success("logout success")
-
+            get().disconnectSocket();
         } catch (err) {
             console.log(err)
             //toast.error(err.response.data.message);
@@ -84,17 +90,18 @@ export const useAuthStore = create((set) => ({
 
             const result = await axiosInstance.post("/auth/login", userData);
             console.log(result)
-            set({ isLogginIng: true })
+           
             if (result.data.success) {
                 toast.success("login successfull")
                 set({ authUser: result.data })
                 set({ isSingingUp: true })
                 localStorage.setItem("token_chat_app", result.data.token)
+                get().connectSocket();
             }
 
         } catch (err) {
             console.log(err)
-            //toast.error(err.response.data.message)
+            toast.error(err.response.data.message)
 
         } finally {
             set({ isLogginIng: false })
@@ -119,6 +126,17 @@ export const useAuthStore = create((set) => ({
         } finally {
             set({ isUpdatingProfile: false });
         }
+    },
+    connectSocket:()=>{
+
+    },
+
+    disconnectSocket: ()=>{
+        const {authUser}= get();
+        if(authUser === null || get().socket ?.connected)
+            return
+        const socket = io(BASE_URL);
+        socket.connect();
     }
 
 }))

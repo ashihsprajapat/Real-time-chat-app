@@ -14,7 +14,7 @@ function Login() {
 
     const handlChange = (e) => {
         e.preventDefault();
-        // console.log(formData)
+        
         setFormData((data) => (
             { ...data, [e.target.name]: e.target.value }
         ))
@@ -22,6 +22,7 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(formData)
         Login(formData);
     }
     return (

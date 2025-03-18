@@ -7,7 +7,6 @@ export const isLogin = async (req, res, next) => {
 
         const token = req.headers.token;
        // console.log(token)
-
         if (!token)
             return res.status(400).json({ success: false, message: "not login" })
 

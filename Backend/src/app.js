@@ -17,19 +17,33 @@ import messageRouter from './routes/message.route.js'
 ///for cloudinary setUp
 import cloudinaryConnection from "./config/cloudinary.connection.js";
 
-const app = express();
+import { server, app, io } from "./config/socket.js";
+
+
 
 const allowedOrigins = ['http://localhost:5173'];
 
+// app.use(cors({
+//     origin: '*',
+//     credentials: true,  // Enable cookies and authorization headers
+
+// }));
+
+app.use("/api/auth/login",(req,res,next)=>{
+    console.log(req.body)
+    next()
+})
+
 app.use(cors({
     origin: (origin, callback) => {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) { // !origin is for same-origin requests (e.g., Postman)
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true,  // Enable cookies and authorization headers
+    credentials: true,
+
 }));
 
 app.use(express.json());
@@ -41,7 +55,7 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("App is listing on port", PORT);
 })
 
@@ -59,4 +73,5 @@ app.get("/", (req, res) => {
 app.use("/api/auth", userAuth)
 
 //route for message
+
 app.use("/api/messages", messageRouter)

@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import toast from 'react-hot-toast'
 import { axiosInstance } from '../lib/axios'
 
-export const useChateStore = create((set) => ({
+export const useChateStore = create((set, get) => ({
     messages: [],
     users: [],
     selectUser: null,
@@ -39,7 +39,8 @@ export const useChateStore = create((set) => ({
         set({ isMessageLoading: true });
         try {
             const result = await axiosInstance.get(`/messages/${userId}`,{headers:{token:localStorage.getItem("token_chat_app")}})
-            set({ message: result.data })
+            console.log(result)
+            set({ messages: result.data.message })
         } catch (err) {
             console.log(err);
             toast.error(err.response.data.message)
@@ -49,18 +50,21 @@ export const useChateStore = create((set) => ({
     },
 
     sendMessage: async(MessageData)=>{
-        const {selectUser, message}= get();
+        const {selectUser, messages}= get();
         try{
-            
-            const result= await axiosInstance.post(`/messages/send-message/${selectUser._id}`,MessageData)
+            console.log(MessageData)
+            const token=localStorage.getItem("token_chat_app")
+            const result= await axiosInstance.post(`/messages/send-message/${selectUser._id}`,MessageData,{headers:{token:token}})
             console.log(result);
-            if(result.data.message){
+            if(result.data.success){
                 set({messages: [...messages,result.data]})
             }
+            return;
         }catch(err){
+            console.log(err)
             toast.error(err.response.data.message)
         }finally{
-
+            
         }
 
     },
