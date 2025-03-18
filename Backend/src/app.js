@@ -19,6 +19,7 @@ import cloudinaryConnection from "./config/cloudinary.connection.js";
 
 import { server, app, io } from "./config/socket.js";
 
+import path from 'path';
 
 
 const allowedOrigins = ['http://localhost:5173'];
@@ -55,6 +56,8 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
+const __dirname=path.resolve();
+
 server.listen(PORT, () => {
     console.log("App is listing on port", PORT);
 })
@@ -75,3 +78,8 @@ app.use("/api/auth", userAuth)
 //route for message
 
 app.use("/api/messages", messageRouter)
+
+
+if(process.env.NODE_ENV==="production"){
+    app.use(express.static(path.join({__dirname:"../../frontend/dist"})))
+}

@@ -1,6 +1,6 @@
 
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { Plus, Image, Navigation } from 'lucide-react';
 import { useChateStore } from '../store/useChatStore';
@@ -11,18 +11,29 @@ import { formateTime } from './../lib/utils';
 
 function ChatContainer({ user }) {
     const { onlineUsers, } = useAuthStore();
-    const { setSelectedUser, messages, getMessage,sendMessage, selectUser, isMessageLoading } = useChateStore();
-    // console.log('online users is', onlineUsers)
-    //console.log('user in chatContainer', user)
 
-    const { authUser } = useAuthStore();
-    //console.log(selectUser)
-    //console.log(authUser)
-    console.log(messages)
+    const { setSelectedUser, messages, getMessage, sendMessage, selectUser, isMessageLoading, subscribeToMessages, unSubscribeFromMessage } = useChateStore();
+
+
+    const { authUser, } = useAuthStore();
+
+    const messageEndRef = useRef(null);
+
+   
 
     useEffect(() => {
         getMessage(selectUser._id)
-    }, [selectUser._id,sendMessage, getMessage])
+
+        subscribeToMessages();
+
+        return () => unSubscribeFromMessage();
+    }, [selectUser._id, sendMessage, getMessage, subscribeToMessages, unSubscribeFromMessage])
+
+    useEffect(() => {
+        if (messageEndRef.current && messages) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [messages])
 
     if (isMessageLoading)
         return <div className=' w-full'>
@@ -35,7 +46,6 @@ function ChatContainer({ user }) {
 
             <ChatHeader user={user} />
 
-            <div className='w-full px-2'>
 
 
                 {/* chats show */}
@@ -44,7 +54,8 @@ function ChatContainer({ user }) {
                     {
                         messages.map((message, i) => (
                             <div
-                                key={i} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `} >
+                                key={message._id} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `}
+                                ref={messageEndRef} >
                                 <div className="chat-image avatar ">
                                     <div className="size-10 rounded-full border">
                                         <img src={message.senderId === authUser._id ? authUser.profilePic || "../assets/image.png"
@@ -61,7 +72,7 @@ function ChatContainer({ user }) {
 
                                 </div>
                                 <div className="chat-bubble flex flex-col">
-                                    
+
                                     {
                                         message.image && (
                                             <img src={message.image} alt='' />
@@ -83,7 +94,6 @@ function ChatContainer({ user }) {
                 <MessageInput />
 
 
-            </div>
         </div>
     )
 }

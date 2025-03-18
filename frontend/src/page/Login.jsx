@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore';
 import { Loader } from 'lucide-react';
+import {Link} from 'react-router-dom'
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -61,6 +62,7 @@ function Login() {
                             "Sign up"
                     }
                 </button>
+                <p>I don't have already an account <Link className='text-primary underline ml-2' to="/signup" >Sign Up</Link> </p>
             </form>
         </div>
     )

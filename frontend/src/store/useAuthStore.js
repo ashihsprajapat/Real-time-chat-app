@@ -3,10 +3,10 @@
 import { create } from 'zustand'
 import { axiosInstance } from './../lib/axios.js';
 import { toast } from 'react-hot-toast'
-import {io} from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 
-const BASE_URL="http://localhost:8080/"
+const BASE_URL =  import.meta.MODE === "developement"? "http://localhost:8080":"/"
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -19,9 +19,9 @@ export const useAuthStore = create((set, get) => ({
 
     isCheckingAuth: true,
 
-    onlineUsers: ["67d02212605072ee8f546c00"],
+    onlineUsers: [],
 
-    socket:null,    
+    socket: null,
 
     chekAuth: async () => {
         try {
@@ -35,8 +35,7 @@ export const useAuthStore = create((set, get) => ({
 
         } catch (err) {
             console.log("err is", err)
-            //   toast.error(err.response.data.message)
-            set({ authUser: null })
+
 
         } finally {
             set({ isCheckingAuth: false, })
@@ -45,12 +44,12 @@ export const useAuthStore = create((set, get) => ({
     },
 
     SignInFun: async (data) => {
-        console.log(data)
+
         set({ isSingingUp: true });
         try {
 
             const result = await axiosInstance.post("/auth/register", data);
-            console.log(result)
+
             if (result.data.success) {
                 toast.success("register successfull")
                 set({ authUser: result.data })
@@ -89,8 +88,8 @@ export const useAuthStore = create((set, get) => ({
         try {
 
             const result = await axiosInstance.post("/auth/login", userData);
-            console.log(result)
-           
+
+
             if (result.data.success) {
                 toast.success("login successfull")
                 set({ authUser: result.data })
@@ -113,7 +112,7 @@ export const useAuthStore = create((set, get) => ({
         try {
 
             const result = await axiosInstance.put("/user/update-profile", data)
-            console.log(result)
+            // console.log(result)
             if (result.data.success) {
                 set({ authUser: result.data.user, isUpdatingProfile: true })
                 toast.success("profile updated successfull  ")
@@ -127,16 +126,29 @@ export const useAuthStore = create((set, get) => ({
             set({ isUpdatingProfile: false });
         }
     },
-    connectSocket:()=>{
 
+    connectSocket: () => {
+        const { authUser } = get();
+        
+        if (!authUser || get().socket?.connected)  // if user not login or signup then nothing happen
+            return
+        const socket = io(BASE_URL, {
+            query: {  ///this called handsack in backend socket.handsack.query.userId
+                userId: authUser._id,
+            }
+
+        });
+        socket.connect();
+        socket.on("getOnlineUser", (userIds) => {
+
+            set({ onlineUsers: userIds })
+        })
+        set({ socket: socket });
     },
 
-    disconnectSocket: ()=>{
-        const {authUser}= get();
-        if(authUser === null || get().socket ?.connected)
-            return
-        const socket = io(BASE_URL);
-        socket.connect();
+    disconnectSocket: () => {
+        if (get().socket?.connect)
+            get().socket.disconnect();
     }
 
 }))

@@ -1,3 +1,4 @@
+import { getReciveSocketId, io } from "../config/socket.js";
 import User from "../model/user.modle.js";
 import Message from './../model/message.model.js';
 import cloudinary from 'cloudinary';
@@ -22,10 +23,8 @@ export const getMessage = async (req, res) => {
 
     try {
         const { id: userToChatId } = req.params;
-       // console.log(userToChatId);
 
         const myId = req.user._id;
-       // console.log(myId);
 
         const message = await Message.find({
             $or: [
@@ -69,6 +68,11 @@ export const sendMessage = async (req, res) => {
 
 
         //todo real time functionality  goes here=> socket.io
+        const receiverSocketId= getReciveSocketId(reciverId);
+
+        if(receiverSocketId){
+            io.to(reciverId).emit("newMessage", newMessage); // this message send only reciver  not to all
+        }
 
         res.status(200).json({ success: true, newMessage })
 

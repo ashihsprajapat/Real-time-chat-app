@@ -57,7 +57,6 @@ export const register = async (req, res) => {
 // login function that check email exist and password same then generate token in res.cookie
 export const authLogin = async (req, res) => {
     const { email, password } = req.body;
-    //console.log(email, password)
 
     if (!email || !password)
         return res.status(400).json({ success: false, message: "All details required" })
@@ -95,7 +94,7 @@ export const authLogin = async (req, res) => {
 export const authLogout = async (req, res) => {
     try {
         // Clear the cookie by setting it with a past expiration date and zero maxAge
-        console.log('cookie chat-app-jwt ', req.cookie)
+        //console.log('cookie chat-app-jwt ', req.cookie)
         res.clearCookie("token_chat_app", {
             httpOnly: true, // Ensures client-side JS can't access the cookie
             sameSite: 'None', // Allow cross-site cookies (if necessary)
@@ -113,7 +112,7 @@ export const updateProfile = async (req, res) => {
     // console.log("profile update")
     try {
         const profilePic = req.file;
-        //  console.log(profilePic)
+
         const userId = req.user._id;
 
         const user = await User.findById(userId);
@@ -125,7 +124,7 @@ export const updateProfile = async (req, res) => {
             return res.status(400).json({ success: false, message: "profile pictuer required" })
 
         const uploadResponce = cloudinary.uploader.upload(profilePic.path)
-        //  console.log(uploadResponce);
+    
 
         const updateUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponce.secure_url });
 
