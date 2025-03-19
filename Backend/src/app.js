@@ -22,11 +22,11 @@ import { server, app, io } from "./config/socket.js";
 import path from 'path';
 
 
-//const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['http://localhost:5173'];
 
-const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['https://your-frontend-app.onrender.com'] // Production frontend URL
-    : ['http://localhost:5173'];  // Development frontend URL
+// const allowedOrigins = process.env.NODE_ENV === 'production'
+//     ? ['https://your-frontend-app.onrender.com'] // Production frontend URL
+//     : ['http://localhost:5173'];  // Development frontend URL
 
 
 
