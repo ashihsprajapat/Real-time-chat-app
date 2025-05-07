@@ -25,7 +25,7 @@ import path from 'path';
 const allowedOrigins = ['http://localhost:5173','https://real-time-chat-app-tdp4.vercel.app/']; // Add production domain here
 
 app.use(cors({
-    origin: (origin, callback) => {
+    origin: (origin, callback) => { 
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
