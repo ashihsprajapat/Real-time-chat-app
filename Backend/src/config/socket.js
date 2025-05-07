@@ -1,14 +1,14 @@
 
 
 import { Server } from 'socket.io'
-import http from 'http'
+import {createServer} from 'http'
 
-
+//for upgrade our https connection to ws
 
 import express from 'express'
 
 const app = express()
-const server = http.createServer(app);
+const server = createServer(app);
 
 const io = new Server(server, {
     cors: ["http://localhost:5173"]
@@ -19,6 +19,7 @@ const io = new Server(server, {
 const userSocketMap = {  // {userId : socket.id}
 
 }
+
 console.log("online users is ", userSocketMap);
 
 export const getReciveSocketId = (userId) => {

@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast'
 import { io } from 'socket.io-client'
 
 
-const BASE_URL =  import.meta.MODE === "developement"? "http://localhost:8080":"/"
+const BASE_URL = import.meta.MODE !== "developement" ? "http://localhost:8080" : "/"
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -27,7 +27,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const token_chat_app = localStorage.getItem("token_chat_app");
             const result = await axiosInstance.get("/auth/check", { headers: { token: token_chat_app } });
-
+            console.log(result)
             if (result.data.success) {
                 set({ authUser: result.data.user })
                 get().connectSocket();
@@ -110,9 +110,9 @@ export const useAuthStore = create((set, get) => ({
     updateProfile: async (data) => {
         set({ isUpdatingProfile: true });
         try {
-
-            const result = await axiosInstance.put("/user/update-profile", data)
-            // console.log(result)
+            const token = localStorage.getItem("token_chat_app")
+            const result = await axiosInstance.put("/user/update-profile", data, { headers: { token: token } })
+            console.log(result)
             if (result.data.success) {
                 set({ authUser: result.data.user, isUpdatingProfile: true })
                 toast.success("profile updated successfull  ")
@@ -129,7 +129,7 @@ export const useAuthStore = create((set, get) => ({
 
     connectSocket: () => {
         const { authUser } = get();
-        
+
         if (!authUser || get().socket?.connected)  // if user not login or signup then nothing happen
             return
         const socket = io(BASE_URL, {

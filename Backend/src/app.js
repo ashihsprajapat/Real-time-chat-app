@@ -22,26 +22,19 @@ import { server, app, io } from "./config/socket.js";
 import path from 'path';
 
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['http://localhost:5173','http://localhost:5174']; // Add production domain here
 
-// const allowedOrigins = process.env.NODE_ENV === 'production'
-//     ? ['https://your-frontend-app.onrender.com'] // Production frontend URL
-//     : ['http://localhost:5173'];  // Development frontend URL
+app.use(cors({
+    origin: (origin, callback) => {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,  // Allow credentials (cookies) to be sent
+}));
 
-
-
-
-
-    app.use(cors({
-        origin: (origin, callback) => {
-            if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
-    }));
 
 app.use(express.json());
 
