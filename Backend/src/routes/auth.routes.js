@@ -20,7 +20,7 @@ Router.route('/logout')
 
 
 Router.route("/update-profile")
-    .put(isLogin,upload.single("profilePic")  , updateProfile)
+    .put(isLogin , updateProfile)
 
 Router.route("/check")
 .get(isLogin,  checkAuth)

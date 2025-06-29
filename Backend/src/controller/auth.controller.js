@@ -3,7 +3,7 @@
 import { tokenGenerator } from '../utils/token.generator.js';
 import User from './../model/user.modle.js';
 import bcrypt from 'bcrypt';
-import cloudinary from 'cloudinary';
+import cloudinary from '../config/cloudinary.connection.js';
 
 
 //register function with unique email , and password fullName then generate token in res.cookie
@@ -111,7 +111,9 @@ export const authLogout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     // console.log("profile update")
     try {
-        const profilePic = req.file;
+        //console.log(req)
+        const profilePic = req.body.profilePic;
+        //console.log("profile pic is", profilePic)
 
         const userId = req.user._id;
 
@@ -123,9 +125,9 @@ export const updateProfile = async (req, res) => {
         if (!profilePic)
             return res.status(400).json({ success: false, message: "profile pictuer required" })
 
-        const uploadResponce = cloudinary.uploader.upload(profilePic.path)
-    
+        const uploadResponce = await cloudinary.uploader.upload(profilePic)
 
+        console.log("upload respons is ", uploadResponce)
         const updateUser = await User.findByIdAndUpdate(userId, { profilePic: uploadResponce.secure_url });
 
         res.status(200).json({ success: true, user: updateUser })

@@ -8,28 +8,24 @@ function ProfilePage() {
     const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
 
 
-    const [image, setImage] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleImage = async (e) => {
         const file = e.target.files[0];
-        if (!file)
-            return;
-        console.log(file)
-        setImage(file)
-        // const reader = new FileReader();
+        if (!file) return;
 
-        // reader.readAsDataURL(file)
+        setImageFile(file); // store file
+        const preview = URL.createObjectURL(file); // create blob preview
+        setPreviewUrl(preview); // show image
 
-        // reader.onload = async () => {
-        //     const base64Image = reader.result;
-        //     setImage(base64Image)
-        //     console.log(base64Image)
-        //     console.log(file)
-        await updateProfile({ profilePic: file })
-        //  }
-
-
-    }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            const base64Image = reader.result;
+            await updateProfile({ profilePic: base64Image }); // or file depending on backend
+        };
+    };
 
 
     // console.log("image is", image)
@@ -47,8 +43,11 @@ function ProfilePage() {
                     <div className="flex flex-col items-center gap-4  py-4 ">
                         <div className="relative  items-center p-4 w-1/4">
 
-                            <img src={image ? `${URL.createObjectURL(image)}` : (authUser.profilePic || "../../src/assets/image.png")} alt=""
-                                className='   rounded-full   ' />
+                            <img
+                                src={previewUrl || authUser.profilePic || "../../src/assets/image.png"}
+                                alt="Profile"
+                                className="rounded-full"
+                            />
 
                             <label htmlFor="avtar_upload"
                                 className={` absolute bottom-0 right-0  gap-2

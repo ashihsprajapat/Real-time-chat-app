@@ -1,7 +1,7 @@
 import { getReciveSocketId, io } from "../config/socket.js";
 import User from "../model/user.modle.js";
 import Message from './../model/message.model.js';
-import cloudinary from 'cloudinary';
+import cloudinary from "../config/cloudinary.connection.js";
 
 
 export const getUsersForSidebar = async (req, res) => {
@@ -50,12 +50,14 @@ export const sendMessage = async (req, res) => {
 
         const { text, image } = req.body;
 
-        let imageUrl="";
+
+        let imageUrl = "";
 
         if (image) {
             let uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
         }
+
 
         const newMessage = new Message({
             senderId,
@@ -68,9 +70,9 @@ export const sendMessage = async (req, res) => {
 
 
         //todo real time functionality  goes here=> socket.io
-        const receiverSocketId= getReciveSocketId(reciverId);
+        const receiverSocketId = getReciveSocketId(reciverId);
 
-        if(receiverSocketId){
+        if (receiverSocketId) {
             io.to(reciverId).emit("newMessage", newMessage); // this message send only reciver  not to all
         }
 

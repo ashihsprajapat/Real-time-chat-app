@@ -54,11 +54,13 @@ export const useChateStore = create((set, get) => ({
         const { selectUser, messages } = get();
         try {
 
+            console.log("MessageData is ",MessageData)
+
             const token = localStorage.getItem("token_chat_app")
             const result = await axiosInstance.post(`/messages/send-message/${selectUser._id}`, MessageData, { headers: { token: token } })
-            console.log("result after send Message",result)
+            
             if (result.data.success) {
-                set({ messages: [...messages, result.data] })
+                set({ messages: [...messages, result.data.newMessage] })
             }
             return;
         } catch (err) {

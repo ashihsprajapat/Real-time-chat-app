@@ -6,12 +6,13 @@ import { getMessage, getUsersForSidebar, sendMessage } from '../controller/messa
 const Router = express.Router()
 
 
-
+//get users for sidebar in frontend
 Router.route("/users")
     .get(isLogin, getUsersForSidebar)
 
 
     //get message for a perticuler user
+    //get message for selected users
 Router.route('/:id')
     .get(isLogin, getMessage)
 

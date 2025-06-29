@@ -19,7 +19,7 @@ function ChatContainer({ user }) {
 
     const messageEndRef = useRef(null);
 
-   
+
 
     useEffect(() => {
         getMessage(selectUser._id)
@@ -48,50 +48,50 @@ function ChatContainer({ user }) {
 
 
 
-                {/* chats show */}
+            {/* chats show */}
 
-                <div className='flex-1   overflow-auto p-4 space-y-4' >
-                    {
-                        messages.map((message, i) => (
-                            <div
-                                key={message._id} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `}
-                                ref={messageEndRef} >
-                                <div className="chat-image avatar ">
-                                    <div className="size-10 rounded-full border">
-                                        <img src={message.senderId === authUser._id ? authUser.profilePic || "../assets/image.png"
-                                            :
-                                            selectUser.profilePic || "../assets/image.png"} alt="" />
-
-                                    </div>
+            <div className='flex-1   overflow-auto p-4 space-y-4' >
+                {
+                    messages.map((message, i) => (
+                        <div
+                            key={message._id} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `}
+                            ref={messageEndRef} >
+                            <div className="chat-image avatar ">
+                                <div className="size-10 rounded-full border">
+                                    <img src={message.senderId === authUser._id ? authUser.profilePic || "../assets/image.png"
+                                        :
+                                        selectUser.profilePic || "../assets/image.png"} alt="" />
 
                                 </div>
-                                <div className="chat-header mb-1">
-                                    {
-                                        <time className='text-sm opacity-50 ml-2'>{formateTime(message.createdAt)}</time>
-                                    }
-
-                                </div>
-                                <div className="chat-bubble flex flex-col">
-
-                                    {
-                                        message.image && (
-                                            <img src={message.image} alt='' />
-                                        )
-                                    }
-                                    {
-                                        message.text && <p>{message.text}</p>
-                                    }
-                                </div>
-
 
                             </div>
-                        ))
-                    }
-                </div>
+                            <div className="chat-header mb-1">
+                                {
+                                    <time className='text-sm opacity-50 ml-2'>{formateTime(message.createdAt)}</time>
+                                }
 
-                {/* input chat */}
+                            </div>
+                            <div className="chat-bubble  flex flex-col max-w-xs">
 
-                <MessageInput />
+                                {
+                                    message.image && (
+                                        <img src={message.image} alt='' className=' cursor-pointer' />
+                                    )
+                                }
+                                {
+                                    message.text && <p>{message.text}</p>
+                                }
+                            </div>
+
+
+                        </div>
+                    ))
+                }
+            </div>
+
+            {/* input chat */}
+
+            <MessageInput />
 
 
         </div>

@@ -37,56 +37,19 @@ function Login() {
     return (
         <>
 
-            <div className='mt-20 flex flex-col gap-4'>
-
-                <form action="" onSubmit={handleSubmit} className='gap-5 flex flex-col'      >
-                    {/* for email input */}
-                    <label className="input validator">
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor">
-                                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                            </g></svg>
-                        <input type="email" placeholder="mail@site.com" required
-                            value={formData.email} onChange={(e) => handlChange(e)} name='email' />
-                    </label>
-                    <div className="validator-hint hidden  text-sm">Enter valid email address</div>
-
-                    {/* for password input */}
-                    <label className="input validator">
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2.5" fill="none" stroke="currentColor"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle></g></svg>
-                        <input type="password" required placeholder="Password" minLength="6" title="Must be more than 8 characters"
-                            name='password' value={formData.password} onChange={(e) => handlChange(e)} />
-                    </label>
-                    <p className="validator-hint hidden  text-sm">
-                        Must be more than 6 characters
-                    </p>
+            
 
 
-                    <button className='btn btn-primary w-1/4 ' type='submit' disabled={isLogginIng} >
-                        {
-                            isLogginIng ? <>
-                                <Loader className="size-5 animate-spin" />
-                                Loading...</>
-                                :
-                                "Sign up"
-                        }
-                    </button>
-                    <p>I don't have already an account <Link className='text-primary underline ml-2' to="/signup" >Sign Up</Link> </p>
-                </form>
-            </div>
-
-
-            <div class="flex h-[700px] w-full">
+            <div class="flex h-[700px] w-full text-white">
                 <div class="w-full hidden md:inline-block">
-                    <img class="h-full" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/leftSideImage.png" alt="leftSideImage" />
+                    <img className="h-3/4 my-20 flex items-center px-5 w-3/4"  src="https://cdn-icons-png.flaticon.com/512/5539/5539745.png" alt="leftSideImage" />
                 </div>
 
                 <div class="w-full flex flex-col items-center justify-center">
 
                     <form class="md:w-96 w-80 flex flex-col items-center justify-center" onSubmit={handleSubmit} >
-                        <h2 class="text-4xl text-gray-900 font-medium">{state}</h2>
-                        <p class="text-sm text-gray-500/90 mt-3">Welcome back! Please sign in to continue</p>
+                        <h2 class="text-4xl text-gray-400 font-medium">{state}</h2>
+                        <p class="text-sm text-gray-400/90 mt-3">Welcome back! Please sign in to continue</p>
 
                         <button type="button" class="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full">
                             <img src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg" alt="googleLogo" />
@@ -134,7 +97,7 @@ function Login() {
                         {/*  conform */}
                         <div class="w-full flex items-center justify-between mt-8 text-gray-500/80">
                             <div class="flex items-center gap-2">
-                                <input class="h-5" type="checkbox" id="checkbox" />
+                                <input class="h-5" type="checkbox" id="checkbox" required />
                                 <label class="text-sm" for="checkbox">Remember me</label>
                             </div>
                             {

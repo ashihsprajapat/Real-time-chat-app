@@ -39,7 +39,7 @@ function MessageInput() {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!text.trim() && imagePreview)
+        if (!text.trim() && !imagePreview)
             return
 
         try {
