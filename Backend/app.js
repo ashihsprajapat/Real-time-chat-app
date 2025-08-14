@@ -6,23 +6,23 @@ import express from 'express';
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
-import mognooseConnection from "./config/mongodb.js";
 
-//user Router
-import userAuth from "./routes/auth.routes.js"
 
-//message Router 
-import messageRouter from './routes/message.route.js'
-
-///for cloudinary setUp
-import cloudinaryConnection from "./config/cloudinary.connection.js";
-
-import { server, app, io } from "./config/socket.js";
+import { server, app, io } from "./src/config/socket.js";
 
 import path from 'path';
+import authRouter from "./src/routes/auth.routes.js";
+import messageRouter from "./src/routes/message.route.js";
+import mognooseConnection from './src/config/mongodb.js';
 
+
+
+app.use(express.json({limit:'10mb'}));
 
 const allowedOrigins = ['http://localhost:5173','https://real-time-chat-app-tdp4-c7khobixl-ashish-prajapats-projects.vercel.app']; // Add production domain here
+
+
+app.use("/*", (req,res, next)=>{console.log(req.body);next()})
 
 app.use(cors({      
     origin: (origin, callback) => {
@@ -36,7 +36,6 @@ app.use(cors({
 }));
 
 
-app.use(express.json({limit:'10mb'}));
 app.use(express.urlencoded({extended:true,limit:'10mb'}))
 app.use(cookieParser());
 
@@ -51,7 +50,7 @@ server.listen(PORT, () => {
     console.log("App is listing on port", PORT);
 })
 
-await mognooseConnection()
+await mognooseConnection ()
     .then(() => console.log("Connect to data base"))
 //.catch((err)=>console.log(err))
 
@@ -64,7 +63,7 @@ app.get("/", (req, res) => {
 app.get("/test", (req,res)=>{res.send("Ok its working")})
 
 //router for authentication
-app.use("/api/auth", userAuth)
+app.use("/api/auth", authRouter)
 
 //route for message
 
@@ -72,7 +71,7 @@ app.use("/api/messages", messageRouter)
 
 
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.VITE_MODE === "production") {
     // Serve the frontend build files from the 'dist' directory
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
 

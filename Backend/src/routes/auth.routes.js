@@ -5,25 +5,25 @@ import upload from '../config/multer.js';
 import { isLogin } from '../middlware/auth.middleware.js';
 
 
-const Router = express.Router();
+const authRouter = express.Router();
 
 //upload.single("image"),
-Router.route("/register")
+authRouter.route("/register")
     .post(register)
 
 
-Router.route("/login")
+authRouter.route("/login")
     .post(authLogin)
 
-Router.route('/logout')
+authRouter.route('/logout')
     .post(authLogout)
 
 
-Router.route("/update-profile")
+authRouter.route("/update-profile")
     .put(isLogin , updateProfile)
 
-Router.route("/check")
+authRouter.route("/check")
 .get(isLogin,  checkAuth)
 
 
-export default Router;
+export default authRouter;
