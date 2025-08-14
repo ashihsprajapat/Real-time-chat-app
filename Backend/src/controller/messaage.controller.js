@@ -68,12 +68,13 @@ export const sendMessage = async (req, res) => {
 
         await newMessage.save();
 
-
+        console.log("new Message ",newMessage)
         //todo real time functionality  goes here=> socket.io
         const receiverSocketId = getReciveSocketId(reciverId);
-
+        console.log(receiverSocketId)
+        console.log("call to socket to rec")
         if (receiverSocketId) {
-            io.to(reciverId).emit("newMessage", newMessage); // this message send only reciver  not to all
+            io.to(receiverSocketId).emit("newMessage", newMessage); // this message send only reciver  not to all
         }
 
         res.status(200).json({ success: true, newMessage })

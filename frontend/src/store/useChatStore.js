@@ -54,7 +54,7 @@ export const useChateStore = create((set, get) => ({
         const { selectUser, messages } = get();
         try {
 
-            console.log("MessageData is ",MessageData)
+            console.log("MessageData is in sendMessage function ",MessageData)
 
             const token = localStorage.getItem("token_chat_app")
             const result = await axiosInstance.post(`/api/messages/send-message/${selectUser._id}`, MessageData, { headers: { token: token } })
@@ -82,12 +82,14 @@ export const useChateStore = create((set, get) => ({
 
 
         socket.on("newMessage", (newMessage) => {
+            console.log("new message socket.on ",newMessage)
+            console.log("selected user is ",selectUser)
             const isMessageSentFromUser = newMessage.senderId === selectUser._id;
-            if (isMessageSentFromUser)
-                return;
+            if (!isMessageSentFromUser){
+                return;}
             set({
                 messages: [...get().messages, newMessage]
-            })
+            })  
         })
     },
 

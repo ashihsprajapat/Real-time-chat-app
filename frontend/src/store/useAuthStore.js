@@ -148,6 +148,10 @@ export const useAuthStore = create((set, get) => ({
 
             set({ onlineUsers: userIds })
         })
+
+       
+
+
         set({ socket: socket });
     },
 
