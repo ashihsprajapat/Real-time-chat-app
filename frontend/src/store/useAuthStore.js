@@ -27,7 +27,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const token_chat_app = localStorage.getItem("token_chat_app");
             const result = await axiosInstance.get("/auth/check", { headers: { token: token_chat_app } });
-           
+
             if (result.data.success) {
                 set({ authUser: result.data.user })
                 get().connectSocket();
@@ -113,7 +113,7 @@ export const useAuthStore = create((set, get) => ({
             console.log(data)
             const token = localStorage.getItem("token_chat_app")
             const result = await axiosInstance.put("/auth/update-profile", data, { headers: { token: token } })
-            console.log("respons for update profile",result)
+            console.log("respons for update profile", result)
             if (result.data.success) {
                 set({ authUser: result.data.user, isUpdatingProfile: true })
                 toast.success("profile updated successfull  ")

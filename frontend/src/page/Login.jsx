@@ -5,12 +5,14 @@ import { Loader } from 'lucide-react';
 import { Link } from 'react-router-dom'
 
 function Login() {
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
 
     const { SignInFun, isLogginIng, Login } = useAuthStore();
+    const [isLoading, setIsLoading]= useState(false);
 
 
     const handlChange = (e) => {
