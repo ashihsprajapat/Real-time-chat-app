@@ -17,14 +17,16 @@ import mognooseConnection from './src/config/mongodb.js';
 
 
 
-app.use(express.json({limit:'10mb'}));
-
-const allowedOrigins = ['http://localhost:5173','https://real-time-chat-app-tdp4-c7khobixl-ashish-prajapats-projects.vercel.app/api']; // Add production domain here
 
 
-// app.use("/*", (req,res, next)=>{console.log(req.body);next()})
+app.use(express.json({ limit: '10mb' }));
 
-app.use(cors({      
+const allowedOrigins = ['http://localhost:5173', 'https://real-time-chat-app-tdp4-c7khobixl-ashish-prajapats-projects.vercel.app']; // Add production domain here
+
+
+//app.use("/*", (req, res, next) => { console.log(req); next() })
+
+app.use(cors({
     origin: (origin, callback) => {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
@@ -36,7 +38,7 @@ app.use(cors({
 }));
 
 
-app.use(express.urlencoded({extended:true,limit:'10mb'}))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(cookieParser());
 
 
@@ -50,7 +52,7 @@ server.listen(PORT, () => {
     console.log("App is listing on port", PORT);
 })
 
-await mognooseConnection ()
+await mognooseConnection()
     .then(() => console.log("Connect to data base"))
 //.catch((err)=>console.log(err))
 
@@ -60,7 +62,7 @@ app.get("/", (req, res) => {
     res.send("ok working")
 })
 
-app.get("/test", (req,res)=>{res.send("Ok its working")})
+app.get("/api/test", (req, res) => { res.send("Ok its working") })
 
 //router for authentication
 app.use("/api/auth", authRouter)

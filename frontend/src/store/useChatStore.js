@@ -17,7 +17,7 @@ export const useChateStore = create((set, get) => ({
         try {
             const token_chat_app = localStorage.getItem("token_chat_app")
 
-            const result = await axiosInstance.get("/messages/users", { headers: { token: token_chat_app } });
+            const result = await axiosInstance.get("/api/messages/users", { headers: { token: token_chat_app } });
 
             if (result.data.success) {
                 set({ users: result.data.user, })
@@ -39,7 +39,7 @@ export const useChateStore = create((set, get) => ({
     getMessage: async (userId) => {
         set({ isMessageLoading: true });
         try {
-            const result = await axiosInstance.get(`/messages/${userId}`, { headers: { token: localStorage.getItem("token_chat_app") } })
+            const result = await axiosInstance.get(`/api/messages/${userId}`, { headers: { token: localStorage.getItem("token_chat_app") } })
 
             set({ messages: result.data.message })
         } catch (err) {
@@ -57,7 +57,7 @@ export const useChateStore = create((set, get) => ({
             console.log("MessageData is ",MessageData)
 
             const token = localStorage.getItem("token_chat_app")
-            const result = await axiosInstance.post(`/messages/send-message/${selectUser._id}`, MessageData, { headers: { token: token } })
+            const result = await axiosInstance.post(`/api/messages/send-message/${selectUser._id}`, MessageData, { headers: { token: token } })
             
             if (result.data.success) {
                 set({ messages: [...messages, result.data.newMessage] })

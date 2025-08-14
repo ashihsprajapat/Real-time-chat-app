@@ -29,7 +29,7 @@ export const useAuthStore = create((set, get) => ({
     chekAuth: async () => {
         try {
             const token_chat_app = localStorage.getItem("token_chat_app");
-            const result = await axiosInstance.get("/auth/check", { headers: { token: token_chat_app } });
+            const result = await axiosInstance.get("/api/auth/check", { headers: { token: token_chat_app } });
 
             if (result.data.success) {
                 set({ authUser: result.data.user })
@@ -51,7 +51,7 @@ export const useAuthStore = create((set, get) => ({
         set({ isSingingUp: true });
         try {
 
-            const result = await axiosInstance.post("/auth/register", data);
+            const result = await axiosInstance.post("/api/auth/register", data);
 
             if (result.data.success) {
                 toast.success("register successfull")
@@ -90,7 +90,7 @@ export const useAuthStore = create((set, get) => ({
     Login: async (userData) => {
         try {
 
-            const result = await axiosInstance.post("/auth/login", userData);
+            const result = await axiosInstance.post("/api/auth/login", userData);
 
             console.log(axiosInstance.baseURL)
             console.log(result.data)
@@ -116,7 +116,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             console.log(data)
             const token = localStorage.getItem("token_chat_app")
-            const result = await axiosInstance.put("/auth/update-profile", data, { headers: { token: token } })
+            const result = await axiosInstance.put("/api/auth/update-profile", data, { headers: { token: token } })
             console.log("respons for update profile", result)
             if (result.data.success) {
                 set({ authUser: result.data.user, isUpdatingProfile: true })
