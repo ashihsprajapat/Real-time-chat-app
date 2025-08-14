@@ -7,9 +7,12 @@ import { io } from 'socket.io-client'
 
 
 const BASE_URL = import.meta.MODE !== "developement" ? "http://localhost:8080" : "/"
+console.log(BASE_URL)
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
+
+    
 
     isSingingUp: false ,
 
@@ -89,7 +92,8 @@ export const useAuthStore = create((set, get) => ({
 
             const result = await axiosInstance.post("/auth/login", userData);
 
-            console.log(result)
+            console.log(axiosInstance.baseURL)
+            console.log(result.data)
             if (result.data.success) {
                 toast.success("login successfull")
                 set({ authUser: result.data })
