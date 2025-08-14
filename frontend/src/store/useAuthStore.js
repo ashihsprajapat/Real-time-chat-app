@@ -12,9 +12,9 @@ console.log(BASE_URL)
 export const useAuthStore = create((set, get) => ({
     authUser: null,
 
-    
 
-    isSingingUp: false ,
+
+    isSingingUp: false,
 
     isLogginIng: false,
 
@@ -49,8 +49,9 @@ export const useAuthStore = create((set, get) => ({
     SignInFun: async (data) => {
 
         set({ isSingingUp: true });
-        try {
 
+        try {
+            set({ isLogginIng: true })
             const result = await axiosInstance.post("/api/auth/register", data);
 
             if (result.data.success) {
@@ -59,6 +60,7 @@ export const useAuthStore = create((set, get) => ({
                 localStorage.setItem("token_chat_app", result.data.token)
                 get().connectSocket();
             }
+            set({ isLogginIng: false })
 
 
         } catch (err) {
@@ -89,11 +91,12 @@ export const useAuthStore = create((set, get) => ({
 
     Login: async (userData) => {
         try {
+            set({ isLogginIng: true })
 
             const result = await axiosInstance.post("/api/auth/login", userData);
 
-            console.log(axiosInstance.baseURL)
-            console.log(result.data)
+            // console.log(axiosInstance.baseURL)
+            // console.log(result.data)
             if (result.data.success) {
                 toast.success("login successfull")
                 set({ authUser: result.data })
@@ -101,6 +104,7 @@ export const useAuthStore = create((set, get) => ({
                 localStorage.setItem("token_chat_app", result.data.token)
                 get().connectSocket();
             }
+            set({ isLogginIng: false })
 
         } catch (err) {
             console.log(err)
@@ -149,7 +153,7 @@ export const useAuthStore = create((set, get) => ({
             set({ onlineUsers: userIds })
         })
 
-       
+
 
 
         set({ socket: socket });

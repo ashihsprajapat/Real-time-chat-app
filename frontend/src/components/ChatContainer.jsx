@@ -52,6 +52,7 @@ function ChatContainer({ user }) {
 
             <div className='flex-1   overflow-auto p-4 space-y-4' >
                 {
+                    messages.length !==0?(
                     messages.map((message, i) => (
                         <div
                             key={message._id} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `}
@@ -85,7 +86,16 @@ function ChatContainer({ user }) {
 
 
                         </div>
-                    ))
+                    )))
+                    :(
+                        <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+                            <div className="mb-4">
+                                <Navigation className="w-12 h-12 animate-bounce" />
+                            </div>
+                            <p className="text-xl font-medium">No messages yet</p>
+                            <p className="text-sm">Send a message to start the conversation!</p>
+                        </div>
+                    )
                 }
             </div>
 

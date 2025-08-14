@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 function Login() {
 
     const [formData, setFormData] = useState({
+        fullName:"",
         email: "",
         password: "",
     })
@@ -27,7 +28,7 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData)
+        //console.log(formData)
 
         if (state == "Sign in") {
 
@@ -70,8 +71,8 @@ function Login() {
                                 <svg width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M0 .55.571 0H15.43l.57.55v9.9l-.571.55H.57L0 10.45zm1.143 1.138V9.9h13.714V1.69l-6.503 4.8h-.697zM13.749 1.1H2.25L8 5.356z" fill="#6B7280" />
                                 </svg>
-                                <input type="email" placeholder="Email id" class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full" required
-                                    value={formData.email} onChange={(e) => handlChange(e)} name='email' />
+                                <input type="text" placeholder="Full Name" class="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full" required
+                                    value={formData.fullName} onChange={(e) => handlChange(e)} name='fullName' />
                             </div>
                         }
 
@@ -111,13 +112,14 @@ function Login() {
 
                         <button type="submit" class="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity">
                             {
-                                isLogginIng ? <>
-                                    <Loader className="size-5 animate-spin" />
-                                    Loading...</>
-                                    :
-                                    (
-                                        state
-                                    )
+                                isLogginIng ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Loader className="size-5 animate-spin" />
+                                        <span>Loading...</span>
+                                    </div>
+                                ) : (
+                                    state
+                                )
                             }
                         </button>
                         {
