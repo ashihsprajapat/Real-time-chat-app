@@ -85,7 +85,7 @@ function SideBar() {
                                     {user.fullName}
                                 </div>
                                 <div className="text-sm text-zinc-400 ">
-                                    {onlineUsers.includes(user._id) ? "online" : "offline"}
+                                    {onlineUsers.includes(user._id) &&"online" }
                                 </div>
 
                             </div>
