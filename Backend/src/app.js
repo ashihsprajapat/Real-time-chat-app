@@ -22,9 +22,9 @@ import { server, app, io } from "./config/socket.js";
 import path from 'path';
 
 
-const allowedOrigins = ['http://localhost:5173','http://localhost:5174']; // Add production domain here
+const allowedOrigins = ['http://localhost:5173','https://real-time-chat-app-tdp4-c7khobixl-ashish-prajapats-projects.vercel.app']; // Add production domain here
 
-app.use(cors({
+app.use(cors({      
     origin: (origin, callback) => {
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
