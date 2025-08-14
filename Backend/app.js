@@ -22,7 +22,7 @@ app.use(express.json({limit:'10mb'}));
 const allowedOrigins = ['http://localhost:5173','https://real-time-chat-app-tdp4-c7khobixl-ashish-prajapats-projects.vercel.app']; // Add production domain here
 
 
-app.use("/*", (req,res, next)=>{console.log(req.body);next()})
+// app.use("/*", (req,res, next)=>{console.log(req.body);next()})
 
 app.use(cors({      
     origin: (origin, callback) => {

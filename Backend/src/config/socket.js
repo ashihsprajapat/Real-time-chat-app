@@ -20,7 +20,7 @@ const userSocketMap = {  // {userId : socket.id}
 
 }
 
-console.log("online users is ", userSocketMap);
+//console.log("online users is ", userSocketMap);
 
 export const getReciveSocketId = (userId) => {
     return userSocketMap[userId];
@@ -28,7 +28,7 @@ export const getReciveSocketId = (userId) => {
 
 
 io.on("connection", (socket) => {
-    console.log("A user Connect to user", socket.id)
+   // console.log("A user Connect to user", socket.id)
 
     const userId = socket.handshake.query.userId;
 
