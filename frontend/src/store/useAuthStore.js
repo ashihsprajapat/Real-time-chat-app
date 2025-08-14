@@ -11,7 +11,7 @@ const BASE_URL = import.meta.MODE !== "developement" ? "http://localhost:8080" :
 export const useAuthStore = create((set, get) => ({
     authUser: null,
 
-    isSingingUp: false,
+    isSingingUp: false ,
 
     isLogginIng: false,
 
@@ -89,7 +89,7 @@ export const useAuthStore = create((set, get) => ({
 
             const result = await axiosInstance.post("/auth/login", userData);
 
-
+            console.log(result)
             if (result.data.success) {
                 toast.success("login successfull")
                 set({ authUser: result.data })
