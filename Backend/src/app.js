@@ -61,6 +61,8 @@ app.get("/", (req, res) => {
     res.send("ok working")
 })
 
+app.get("/test", (req,res)=>{res.send("Ok its working")})
+
 //router for authentication
 app.use("/api/auth", userAuth)
 
