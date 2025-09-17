@@ -12,7 +12,8 @@ console.log(BASE_URL)
 export const useAuthStore = create((set, get) => ({
     authUser: null,
 
-
+    mode:"dark",
+    toggleMode: (mode) => set({ mode }),
 
     isSingingUp: false,
 

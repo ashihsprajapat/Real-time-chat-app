@@ -15,7 +15,7 @@ function ChatContainer({ user }) {
     const { setSelectedUser, messages, getMessage, sendMessage, selectUser, isMessageLoading, subscribeToMessages, unSubscribeFromMessage } = useChateStore();
 
 
-    const { authUser, } = useAuthStore();
+    const { authUser,mode } = useAuthStore();
 
     const messageEndRef = useRef(null);
 
@@ -50,50 +50,59 @@ function ChatContainer({ user }) {
 
             {/* chats show */}
 
-            <div className='flex-1   overflow-auto p-4 space-y-4' >
+            <div className={`flex-1 overflow-auto p-4 space-y-4 ${mode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'} scrollbar-thin scrollbar-thumb-primary scrollbar-track-transparent`}>
                 {
-                    messages.length !==0?(
-                    messages.map((message, i) => (
-                        <div
-                            key={message._id} className={`chat   ${message.senderId === authUser._id ? "chat-end" : "chat-start"} `}
-                            ref={messageEndRef} >
-                            <div className="chat-image avatar ">
-                                <div className="size-10 rounded-full border">
-                                    <img src={message.senderId === authUser._id ? authUser.profilePic || "../assets/image.png"
-                                        :
-                                        selectUser.profilePic || "../assets/image.png"} alt="" />
-
+                    messages.length !== 0 ? (
+                        messages.map((message, i) => (
+                            <div
+                                key={message._id}
+                                className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"} animate-fade-in`}
+                                ref={i === messages.length - 1 ? messageEndRef : null}>
+                                <div className="chat-image avatar">
+                                    <div className="size-10 rounded-full border-2 border-gray-200 hover:scale-110 transition-transform duration-300 shadow-lg">
+                                        <img
+                                            src={message.senderId === authUser._id ? authUser.profilePic || "../assets/image.png"
+                                                : selectUser.profilePic || "../assets/image.png"}
+                                            alt="Profile"
+                                            className="object-cover rounded-full"
+                                        />
+                                    </div>
                                 </div>
-
+                                <div className="chat-header mb-1">
+                                    <time className={`text-xs ${mode === 'dark' ? 'text-gray-400' : 'text-gray-600'} ml-2 font-medium`}>
+                                        {formateTime(message.createdAt)}
+                                    </time>
+                                </div>
+                                <div className={`chat-bubble flex flex-col max-w-xs md:max-w-md lg:max-w-lg 
+                                    ${message.senderId === authUser._id 
+                                        ? mode === 'dark'
+                                            ? 'bg-gray-700 text-white' 
+                                            : 'bg-blue-400 text-white'
+                                        : mode === 'dark'
+                                            ? 'bg-gray-800 text-white'
+                                            : 'bg-gray-200 text-gray-800'
+                                    } rounded-xl shadow-md hover:shadow-xl transition-all duration-300 backdrop-blur-sm`}>
+                                    {message.image && (
+                                        <img
+                                            src={message.image}
+                                            alt="Message attachment"
+                                            className="rounded-lg cursor-pointer hover:opacity-90 transition-opacity duration-300 max-w-full h-auto hover:scale-[1.02]"
+                                            loading="lazy"
+                                        />
+                                    )}
+                                    {message.text && (
+                                        <p className="break-words leading-relaxed">{message.text}</p>
+                                    )}
+                                </div>
                             </div>
-                            <div className="chat-header mb-1">
-                                {
-                                    <time className='text-sm opacity-50 ml-2'>{formateTime(message.createdAt)}</time>
-                                }
-
+                        ))
+                    ) : (
+                        <div className={`flex-1 flex flex-col items-center justify-center ${mode === 'dark' ? 'text-gray-400' : 'text-gray-500'} animate-fade-in`}>
+                            <div className="mb-4 transform hover:rotate-12 transition-transform duration-300">
+                                <Navigation className="w-16 h-16 animate-bounce text-primary" />
                             </div>
-                            <div className="chat-bubble  flex flex-col max-w-xs">
-
-                                {
-                                    message.image && (
-                                        <img src={message.image} alt='' className=' cursor-pointer' />
-                                    )
-                                }
-                                {
-                                    message.text && <p>{message.text}</p>
-                                }
-                            </div>
-
-
-                        </div>
-                    )))
-                    :(
-                        <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
-                            <div className="mb-4">
-                                <Navigation className="w-12 h-12 animate-bounce" />
-                            </div>
-                            <p className="text-xl font-medium">No messages yet</p>
-                            <p className="text-sm">Send a message to start the conversation!</p>
+                            <p className="text-2xl font-semibold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">No messages yet</p>
+                            <p className="text-sm mt-2 opacity-80">Send a message to start the conversation!</p>
                         </div>
                     )
                 }
